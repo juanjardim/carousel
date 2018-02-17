@@ -1,0 +1,64 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    padding-top: 10px;
+}
+
+.carousel {
+    display: flex;
+    flex-direction: row;
+}
+
+.container {
+    display: flex;
+    flex-direction: 1;
+    flex: 1 1 auto;
+    overflow-x: hidden;
+    transition: all 0.5s;
+    z-index: 10;
+    .carousel-item {
+        flex: 1 1 auto;
+        background-color: #ccc;
+        margin-left: 5px;
+        margin-right: 5px;
+        justify-content: center;
+        text-align: center;
+        min-width: 300px;
+        height: 300px;
+        display: flex;
+    }
+}
+
+.btn {
+    z-index: 100;
+    width: 50px;
+    min-width: 50px;
+}
+
+.dots {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+    justify-content: center;
+    .dot {
+        border-radius: 50%;
+        background-color: #5576D1;
+        width: 20px;
+        height: 20px;
+        margin: 0 5px;
+        cursor: pointer;
+        &.active,
+        &:hover {
+            background-color: #303AB2;
+        }
+        &:first-of-type {
+            margin-left: 0px;
+        }
+        &:last-of-type {
+            margin-right: 0px;
+        }
+    }
+}
