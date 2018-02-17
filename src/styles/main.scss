@@ -12,13 +12,22 @@ body{
     flex-direction: row;
 }
 
+.carousel-wrapper{
+    position: relative;
+    overflow: hidden;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
 .container {
     display: flex;
     flex-direction: 1;
     flex: 1 1 auto;
-    overflow-x: hidden;
     transition: all 0.5s;
     z-index: 10;
+    position: relative;
+    
+
     .carousel-item {
         flex: 1 1 auto;
         background-color: #ccc;
@@ -27,6 +36,7 @@ body{
         justify-content: center;
         text-align: center;
         min-width: 300px;
+        max-width: 300px;
         height: 300px;
         display: flex;
     }
@@ -36,6 +46,7 @@ body{
     z-index: 100;
     width: 50px;
     min-width: 50px;
+    cursor: pointer;
 }
 
 .dots {

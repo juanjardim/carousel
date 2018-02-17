@@ -15,32 +15,107 @@
             current = 0,
             coordinates = [];
 
-        var items = document.querySelectorAll('.carousel-item');
+        var items = getItems();
 
         items.forEach((item, index) => {
             previus = coordinates[index - 1] || 0;
             var style = window.getComputedStyle(item);
-            current = item.offsetWidth + style.marginRight;
-            coordinates.push(previus + current * -1);
+            current = item.offsetWidth + parseFloat(style.marginRight);
+            coordinates.push(previus + current);
         });
 
         _coordinates = coordinates;
+    };
+
+    var getItems = function () {
+        return document.querySelectorAll('.carousel-item');
+    }
+
+    var getRightVisibleElementPosition = function () {
+        var items = getItems();
+        var currentElementPosition = 0;
+        var wrapper = document.querySelector('.carousel-wrapper');
+        var scrollLeft = wrapper.scrollLeft;
+        var containerWidth = wrapper.offsetWidth;
+        var currentElement = items.length - 1;
+        for (let i = 0; i < items.length; i++) {
+            var item = items[i];
+            var offsetLeft = item.offsetLeft - scrollLeft;
+            var xPosition = offsetLeft + item.offsetWidth;
+            if (offsetLeft >= 0 && xPosition > containerWidth) {
+                currentElement = i;
+                break;
+            }
+        }
+        return currentElement;
+    }
+
+    var getLeftVisibleElementPosition = function () {
+        var items = getItems();
+        var currentElementPosition = 0;
+        var currentElement = 0;
+        var wrapper = document.querySelector('.carousel-wrapper');
+        var scrollLeft = wrapper.scrollLeft;
+
+        for (let i = 0; i < items.length; i++) {
+            var item = items[i];
+            var offsetLeft = item.offsetLeft - scrollLeft;
+            if (offsetLeft <= 0) {
+                currentElement = i;
+            } else {
+                break;
+            }
+        }
+        return currentElement;
     }
 
     var moveLeft = () => {
-        console.log("left");
-        moveToCoordinate(300);
+        var currentElementPosition = getLeftVisibleElementPosition();
+        moveToCoordinate(_coordinates[currentElementPosition - 1]);
     };
 
     var moveRight = () => {
-        console.log("right");
-        moveToCoordinate(-300);
+        var currentElementPosition = getRightVisibleElementPosition();
+        moveToCoordinate(_coordinates[currentElementPosition - 1]);
     };
 
-    var moveToCoordinate = (coordinate) => {
-        var containerElement = document.getElementById(container);
-        containerElement.style.marginLeft =`${coordinate}px`;
+    var moveToCoordinate = (coordinate, direction) => {
+        if (coordinate === null)
+            return;
+        var containerElement = document.querySelector('.carousel-wrapper');
+        containerElement.scrollLeft = coordinate;
+        //scrollTo(containerElement, coordinate, 1250);
     }
+
+    var timeout = 0;
+
+    var scrollTo = (element, to, duration) => {
+        var start = element.scrollLeft,
+            change = to - start,
+            currentTime = 0,
+            increment = 50;
+
+        clearTimeout(timeout);
+
+        var easeInOutQuad = (t, b, c, d) => {
+            t /= d / 2;
+            if (t < 1) return c / 2 * t * t + b;
+            t--;
+            return -c / 2 * (t * (t - 2) - 1) + b;
+        };
+
+        var animateScroll = function () {
+            currentTime += increment;
+            var val = easeInOutQuad(currentTime, start, change, duration);
+            element.scrollLeft = val;
+            if (currentTime < duration) {
+                timeout = setTimeout(animateScroll, increment);
+            }
+        };
+        animateScroll();
+    }
+
+
 
     init();
 })();
