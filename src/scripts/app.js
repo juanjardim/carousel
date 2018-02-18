@@ -20,7 +20,7 @@
         items.forEach((item, index) => {
             previus = coordinates[index - 1] || 0;
             var style = window.getComputedStyle(item);
-            current = item.offsetWidth + parseFloat(style.marginRight);
+            current = item.offsetWidth + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
             coordinates.push(previus + current);
         });
 
@@ -33,7 +33,6 @@
 
     var getRightVisibleElementPosition = function () {
         var items = getItems();
-        var currentElementPosition = 0;
         var wrapper = document.querySelector('.carousel-wrapper');
         var scrollLeft = wrapper.scrollLeft;
         var containerWidth = wrapper.offsetWidth;
@@ -47,7 +46,9 @@
                 break;
             }
         }
-        return currentElement;
+
+        var currentPosition = _coordinates[currentElement];
+        return Math.abs((containerWidth / 2) - currentPosition);
     }
 
     var getLeftVisibleElementPosition = function () {
@@ -55,6 +56,7 @@
         var currentElementPosition = 0;
         var currentElement = 0;
         var wrapper = document.querySelector('.carousel-wrapper');
+        var containerWidth = wrapper.offsetWidth;
         var scrollLeft = wrapper.scrollLeft;
 
         for (let i = 0; i < items.length; i++) {
@@ -66,25 +68,28 @@
                 break;
             }
         }
-        return currentElement;
+        if (currentElement == 0)
+            return 0;
+        var currentPosition = _coordinates[currentElement];
+        return Math.abs((containerWidth / 2) - currentPosition);
     }
 
     var moveLeft = () => {
-        var currentElementPosition = getLeftVisibleElementPosition();
-        moveToCoordinate(_coordinates[currentElementPosition - 1]);
+        var currentPosition = getLeftVisibleElementPosition();
+        moveToCoordinate(currentPosition);
     };
 
     var moveRight = () => {
-        var currentElementPosition = getRightVisibleElementPosition();
-        moveToCoordinate(_coordinates[currentElementPosition - 1]);
+        var currentPosition = getRightVisibleElementPosition();
+        moveToCoordinate(currentPosition);
     };
 
     var moveToCoordinate = (coordinate, direction) => {
         if (coordinate === null)
             return;
         var containerElement = document.querySelector('.carousel-wrapper');
-        containerElement.scrollLeft = coordinate;
-        //scrollTo(containerElement, coordinate, 1250);
+        //containerElement.scrollLeft = coordinate;
+        scrollTo(containerElement, coordinate, 1250);
     }
 
     var timeout = 0;
